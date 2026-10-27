@@ -48,6 +48,6 @@ A comprehensive, production-grade repository documenting the end-to-end digital 
 
 ## 👨‍💻 Author
 
-**Aravind**  
-*Aspiring VLSI & ASIC Physical Design Engineer*  
+**[Sri Charan Aitharaju](https://github.com/AitharajuSriCharan)**  
+*Digital ASIC & Physical Design Engineer*  
 Open-Source Silicon Contributor

@@ -1,4 +1,4 @@
-# 🚀 Open-Silicon ASIC Design & Physical Design Hub (SkyWater 130nm)
+# 🚀 sky130_physical_design
 
 [![PDK](https://img.shields.io/badge/PDK-SkyWater%20130nm%20(sky130A)-blue.svg)](https://github.com/google/skywater-pdk)
 [![Simulation](https://img.shields.io/badge/Simulation-Icarus%20Verilog%20%7C%20GTKWave-brightgreen.svg)](https://github.com/steveicarus/iverilog)

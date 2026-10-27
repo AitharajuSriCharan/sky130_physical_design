@@ -95,8 +95,11 @@ endmodule
 | :--- | :--- | :--- |
 | **Total Standard Cells** | **1** | Mapped directly to a dedicated silicon MUX standard cell. |
 | **Cell Type** | `sky130_fd_sc_hd__mux2_1` | High-density 2:1 multiplexer. |
+| **Chip Area** | **11.2608 µm²** | Ultra-compact cell footprint. |
 | **Sequential Elements** | **0** | Pure combinational logic (no latch or flip-flop overhead). |
 | **Input / Output Ports** | 3 Inputs (`i0`, `i1`, `sel`), 1 Output (`y`) | Fully bound and routed. |
+
+![Yosys Synthesis Statistics](./docs/images/synthesis_statistics.png)
 
 ---
 
@@ -104,6 +107,9 @@ endmodule
 
 ### The Challenge:
 During initial synthesis attempts without `techmap`, invoking `abc -liberty ...` directly after `proc; opt` yielded the following compiler warning:
+
+![ABC Unmapped Edge-Case Terminal Output](./docs/images/abc_unmapped_edgecase.png)
+
 ```text
 Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
 Don't call ABC as there is nothing to map.

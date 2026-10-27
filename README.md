@@ -49,5 +49,4 @@ A comprehensive, production-grade repository documenting the end-to-end digital 
 ## 👨‍💻 Author
 
 **[Sri Charan Aitharaju](https://github.com/AitharajuSriCharan)**  
-*Digital ASIC & Physical Design Engineer*  
 Open-Source Silicon Contributor

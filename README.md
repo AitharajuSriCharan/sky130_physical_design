@@ -23,6 +23,13 @@ A comprehensive, production-grade repository documenting the end-to-end digital 
         ├── Boolean Optimization & Decomposition (techmap)
         ├── Standard Cell Mapping (ABC + Sky130 HD Library)
         └── Silicon Gate-Level Netlist Generation
+                │
+                ▼
+  [ 03. Sequential Logic, Clocking & Synthesis Optimization ]
+        ├── Flip-Flop Architectures (Async Reset, Async Set, Sync Reset)
+        ├── Silicon Cell Mapping (sky130_fd_sc_hd__dfrtp_1, dfstp_2, dfxtp_1)
+        ├── Hierarchical vs. Flattened Netlist Synthesis
+        └── Hardware Optimizations (Zero-Cost Wire Shifts & Logic Reduction)
 ```
 
 ---
@@ -33,6 +40,7 @@ A comprehensive, production-grade repository documenting the end-to-end digital 
 | :--- | :--- | :--- |
 | [`01_RTL_Design_and_Verification/`](./01_RTL_Design_and_Verification/) | RTL design, testbenches, cycle-accurate VCD waveforms, 100% truth table verification. | ✅ Verified & Complete |
 | [`02_Logic_Synthesis_and_Technology_Mapping/`](./02_Logic_Synthesis_and_Technology_Mapping/) | Yosys elaboration, `techmap` Boolean factorization, ABC mapping to `sky130_fd_sc_hd__mux2_1`. | ✅ Verified & Complete |
+| [`03_Sequential_Logic_and_Clocking/`](./03_Sequential_Logic_and_Clocking/) | Sequential memory elements, clocking latency, hierarchical vs flat synthesis, arithmetic wire-shift optimizations. | ✅ Verified & Complete |
 
 ---
 

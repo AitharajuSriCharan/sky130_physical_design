@@ -42,13 +42,44 @@ This module delivers a comprehensive, silicon-proven exploration of:
 * **Silicon Behavior:** When `async_reset` transitions HIGH, the output $Q$ drops to `0` **instantly**, completely bypassing the clock. In CMOS silicon, the reset pin directly enables a pull-down transistor network inside the master and slave latches, discharging the internal storage node to Ground.
 * **Timing Constraints:** Subject to **Recovery Time ($T_{\text{rec}}$)** and **Removal Time ($T_{\text{rem}}$)** relative to the clock.
 
+#### Digital Simulation Waveform (GTKWave)
+Notice at $t = 57\,\text{ns}$ (mid-cycle, between clock edges), `async_reset` is asserted and output `q` drops to `0` **instantly** without waiting for the clock edge at $65\,\text{ns}$:
+
+![Asynchronous Reset GTKWave Waveform](docs/images/dff_asyncres_waveform_gtkwave.png)
+
+#### Internal RTLIL Primitive Inference (`$adff`)
+During `proc`, Yosys detects the asynchronous reset and generates an internal `$adff` macro:
+
+![Yosys Internal adff Primitive](docs/images/dff_asyncres_coarse_adff.png)
+
+#### Silicon Synthesis Statistics & Wire Counts
+Yosys technology mapping report confirming 5 wires, 2 cells (`sky130_fd_sc_hd__dfrtp_1` + `sky130_fd_sc_hd__clkinv_1`), and $28.7776\,\mu\text{m}^2$ total silicon area:
+
+![Asynchronous Reset Synthesis Statistics](docs/images/dff_asyncres_synthesis_stats.png)
+
+#### Physical Gate-Level Schematic (SkyWater 130nm)
 ![Asynchronous Reset DFF Schematic](docs/images/dff_asyncres_schematic.png)
+
+---
 
 ### 3.2 Asynchronous Set Flip-Flop (`dff_async_set`)
 * **Verilog Sensitivity:** `always @(posedge clk or posedge async_set)`
 * **Silicon Behavior:** Forces $Q = 1$ immediately upon assertion of `async_set`, independent of clock transitions. Maps to `sky130_fd_sc_hd__dfstp_2`.
 
+#### Digital Simulation Waveform (GTKWave)
+Notice at $t = 47\,\text{ns}$, `async_set` goes HIGH mid-cycle, and output `q` jumps to `1` **immediately**:
+
+![Asynchronous Set GTKWave Waveform](docs/images/dff_async_set_waveform_gtkwave.png)
+
+#### Silicon Synthesis Statistics & Wire Counts
+Yosys technology mapping report confirming 5 wires, 2 cells (`sky130_fd_sc_hd__dfstp_2` + `sky130_fd_sc_hd__clkinv_1`), and $30.0288\,\mu\text{m}^2$ total silicon area:
+
+![Asynchronous Set Synthesis Statistics](docs/images/dff_async_set_synthesis_stats.png)
+
+#### Physical Gate-Level Schematic (SkyWater 130nm)
 ![Asynchronous Set DFF Schematic](docs/images/dff_async_set_schematic.png)
+
+---
 
 ### 3.3 Synchronous Reset Flip-Flop (`dff_syncres`)
 * **Verilog Sensitivity:** `always @(posedge clk)` *(Notice: reset is NOT in sensitivity list!)*
@@ -56,8 +87,16 @@ This module delivers a comprehensive, silicon-proven exploration of:
 * **The Gating Equation:**
   $$D_{\text{eff}} = D \cdot \overline{\text{SYNC\_RESET}}$$
   When $\text{SYNC\_RESET} = 1$, $D_{\text{eff}} = 0$. On the next rising clock edge, the plain flip-flop samples 0.
-* **Synchronous Reset Latency:** The delay between when reset is asserted mid-cycle and when the output actually clears on the next rising clock edge.
+* **Synchronous Reset Latency:** The delay between when reset is asserted mid-cycle ($57\,\text{ns}$) and when the output actually clears on the next rising clock edge ($65\,\text{ns}$).
 * **Glitch Immunity:** Provides complete immunity against transient noise glitches on the reset line occurring between clock edges.
+
+#### Silicon Synthesis Statistics & Wire Counts
+Yosys technology mapping report confirming 5 wires, 2 cells (`sky130_fd_sc_hd__dfxtp_1` + `sky130_fd_sc_hd__lpflow_isobufsrc_1`), and $26.2752\,\mu\text{m}^2$ total silicon area:
+
+![Synchronous Reset Synthesis Statistics](docs/images/dff_syncres_synthesis_stats.png)
+
+#### Physical Gate-Level Schematic (SkyWater 130nm)
+Notice the flip-flop has **NO RESET PIN** (`CLK`, `D`, `Q` only), with the isolation gate driving input $D$:
 
 ![Synchronous Reset DFF Schematic](docs/images/dff_syncres_schematic.png)
 
@@ -101,6 +140,10 @@ $$Y = A \times 2 = \{A[2:0],\, 1'b0\}$$
 $$Y = A \times 8 = \{A[2:0],\, 3'b000\}$$
 Yosys recognizes power-of-2 constants and eliminates arithmetic multipliers completely. The resulting netlist contains **0 logic cells**, implemented purely through metal layer interconnect wiring.
 
+#### Synthesis Statistics Report (Zero Cells / Zero Gates):
+![Multiplication by 2 Synthesis Stats](docs/images/mult2_synthesis_stats.png)
+
+#### Physical Wire Routing Schematic:
 ![Multiplication by 2 Zero-Cell Shift](docs/images/mult2_schematic.png)
 
 ### 5.2 Boolean Gating Simplification ($A \,?\, B : 0$)

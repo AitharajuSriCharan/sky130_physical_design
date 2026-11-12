@@ -1,0 +1,12 @@
+# Intermediate EDA / Graphviz run files
+*.dot.pid
+.yosys_show.dot
+.yosys_show.dot.pid
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db

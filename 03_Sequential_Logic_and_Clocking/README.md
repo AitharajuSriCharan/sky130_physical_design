@@ -90,6 +90,11 @@ Yosys technology mapping report confirming 5 wires, 2 cells (`sky130_fd_sc_hd__d
 * **Synchronous Reset Latency:** The delay between when reset is asserted mid-cycle ($57\,\text{ns}$) and when the output actually clears on the next rising clock edge ($65\,\text{ns}$).
 * **Glitch Immunity:** Provides complete immunity against transient noise glitches on the reset line occurring between clock edges.
 
+#### Digital Simulation Waveform (GTKWave)
+Notice that at $t = 57\,\text{ns}$ (mid-cycle while $Q = 1$), `sync_reset` is asserted. Unlike asynchronous reset, output `q` **does NOT drop immediately**; it remains HIGH until the subsequent rising clock edge at $t = 65\,\text{ns}$—empirically demonstrating the **$8\,\text{ns}$ synchronous reset latency window**:
+
+![Synchronous Reset GTKWave Waveform](docs/images/dff_syncres_waveform_gtkwave.png)
+
 #### Silicon Synthesis Statistics & Wire Counts
 Yosys technology mapping report confirming 5 wires, 2 cells (`sky130_fd_sc_hd__dfxtp_1` + `sky130_fd_sc_hd__lpflow_isobufsrc_1`), and $26.2752\,\mu\text{m}^2$ total silicon area:
 
@@ -159,7 +164,17 @@ Yosys collapses the 4-transistor multiplexer into a single **`sky130_fd_sc_hd__a
 
 ## 6. Verification and Synthesis Execution
 
-### 6.1 Simulation
+### 6.1 1-Click Automated Batch Verification
+To simulate all flip-flop testbenches with a single command:
+```bash
+./scripts/run_all_sim.sh
+```
+To run end-to-end technology mapping and netlist generation for all sequential modules in Yosys:
+```bash
+./scripts/run_all_synth.sh
+```
+
+### 6.2 Manual Step-by-Step Simulation Flow
 ```bash
 # Compile and simulate any module (e.g. dff_asyncres)
 iverilog -o sim/dff_asyncres.vvp src/dff_asyncres.v tb/tb_dff_asyncres.v
@@ -167,15 +182,15 @@ vvp sim/dff_asyncres.vvp
 gtkwave sim/dff_asyncres.vcd &
 ```
 
-### 6.2 Synthesis Flow (Yosys)
+### 6.3 Manual Technology Synthesis Flow (Yosys)
 ```tcl
 read_verilog src/dff_asyncres.v
 hierarchy -check -top dff_asyncres
 proc; opt
 techmap; opt
-dfflibmap -liberty <sky130.lib>
-abc -liberty <sky130.lib>
+dfflibmap -liberty <path_to_sky130.lib>
+abc -liberty <path_to_sky130.lib>
 clean
-stat -liberty <sky130.lib>
+stat -liberty <path_to_sky130.lib>
 write_verilog -noattr netlist/dff_asyncres_synth.v
 ```

@@ -6,26 +6,17 @@ module multiple_modules(a, b, c, y);
   input c;
   wire \inst1.a ;
   wire \inst1.b ;
-  wire \inst1.y ;
-  wire \inst2.a ;
   wire \inst2.b ;
   wire \inst2.y ;
-  wire net1;
   output y;
-  sky130_fd_sc_hd__and2_0 _0_ (
-    .A(\inst1.b ),
-    .B(\inst1.a ),
-    .X(\inst1.y )
-  );
-  sky130_fd_sc_hd__lpflow_inputiso1p_1 _1_ (
-    .A(\inst2.b ),
-    .SLEEP(\inst2.a ),
-    .X(\inst2.y )
+  sky130_fd_sc_hd__a21o_1 _0_ (
+    .A1(a),
+    .A2(b),
+    .B1(c),
+    .X(y)
   );
   assign \inst1.a  = a;
   assign \inst1.b  = b;
-  assign net1 = \inst1.y ;
-  assign \inst2.a  = net1;
   assign \inst2.b  = c;
-  assign y = \inst2.y ;
+  assign \inst2.y  = y;
 endmodule

@@ -23,8 +23,8 @@ module sub_module1(a, b, y);
   input b;
   output y;
   sky130_fd_sc_hd__and2_0 _0_ (
-    .A(b),
-    .B(a),
+    .A(a),
+    .B(b),
     .X(y)
   );
 endmodule
@@ -34,8 +34,8 @@ module sub_module2(a, b, y);
   input b;
   output y;
   sky130_fd_sc_hd__lpflow_inputiso1p_1 _0_ (
-    .A(b),
-    .SLEEP(a),
+    .A(a),
+    .SLEEP(b),
     .X(y)
   );
 endmodule

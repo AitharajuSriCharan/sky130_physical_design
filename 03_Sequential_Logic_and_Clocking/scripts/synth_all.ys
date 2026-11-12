@@ -1,0 +1,100 @@
+# ==============================================================================
+# Script: synth_all.ys (Standard Yosys Command Script)
+# Project: Sky130 Physical Design - Module 03 (Sequential Logic & Synthesis)
+# Author: Sri Charan Aitharaju (GitHub: @AitharajuSriCharan)
+# ==============================================================================
+
+# 1. Asynchronous Reset Flip-Flop (dff_asyncres)
+read_verilog src/dff_asyncres.v
+hierarchy -check -top dff_asyncres
+proc; opt
+techmap; opt
+dfflibmap -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/dff_asyncres_synth.v
+design -reset
+
+# 2. Asynchronous Set Flip-Flop (dff_async_set)
+read_verilog src/dff_async_set.v
+hierarchy -check -top dff_async_set
+proc; opt
+techmap; opt
+dfflibmap -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/dff_async_set_synth.v
+design -reset
+
+# 3. Synchronous Reset Flip-Flop (dff_syncres)
+read_verilog src/dff_syncres.v
+hierarchy -check -top dff_syncres
+proc; opt
+techmap; opt
+dfflibmap -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/dff_syncres_synth.v
+design -reset
+
+# 4. Multiple Modules - Hierarchical
+read_verilog src/multiple_modules.v
+hierarchy -check -top multiple_modules
+proc; opt
+techmap; opt
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/multiple_modules_hier.v
+design -reset
+
+# 5. Multiple Modules - Flattened
+read_verilog src/multiple_modules.v
+hierarchy -check -top multiple_modules
+proc; opt
+flatten
+techmap; opt
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/multiple_modules_flat.v
+design -reset
+
+# 6. Constant Multipliers
+read_verilog src/mult2.v
+hierarchy -check -top mult2
+proc; opt
+clean
+stat
+write_verilog -noattr netlist/mult2_synth.v
+design -reset
+
+read_verilog src/mult8.v
+hierarchy -check -top mult8
+proc; opt
+clean
+stat
+write_verilog -noattr netlist/mult8_synth.v
+design -reset
+
+read_verilog src/mult9.v
+hierarchy -check -top mult9
+proc; opt
+clean
+stat
+write_verilog -noattr netlist/mult9_synth.v
+design -reset
+
+# 7. Boolean Gating Optimization (opt_check)
+read_verilog src/opt_check.v
+hierarchy -check -top opt_check
+proc; opt
+techmap; opt
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr netlist/opt_check_synth.v
+design -reset

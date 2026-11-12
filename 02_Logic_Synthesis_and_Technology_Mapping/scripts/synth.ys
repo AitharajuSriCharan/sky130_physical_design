@@ -1,0 +1,21 @@
+# Read design
+read_verilog ../01_RTL_Design_and_Verification/src/good_mux.v
+
+# Elaborate hierarchy
+hierarchy -check -top good_mux
+
+# Translate processes to netlist primitives
+proc; opt
+
+# Decompose coarse-grain primitives into fine-grain logic
+techmap; opt
+
+# Map to SkyWater 130nm High-Density Library
+abc -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Clean up unused nets and print statistics
+clean
+stat -liberty /home/aravi/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Write gate-level netlist
+write_verilog -noattr netlist/good_mux_synth.v

@@ -84,6 +84,10 @@ For reviewers, ASIC design engineers, and technical interviewers, navigate this 
    * **Why it matters:** Eliminates the #1 cause of catastrophic silicon re-spins by proving divergence between behavioral simulator event queues and synthesized CMOS hardware. Analyzes sensitivity list bugs (`bad_mux`), blocking race conditions (`blocking_caveat`), and unwanted latch inference (`incomp_if`, `incomp_case`).
    * **Key Artifacts:** Comparative RTL vs GLS waveform timing traces (GTKWave), gate-level schematics, execution logs against SkyWater 130nm standard cell models (`primitives.v` + `sky130_fd_sc_hd.v`), and Yosys `$dlatch` vs `mux4_2` comparative reports.
 
+5. **[Module 05: OpenLane Backend Flow — Synthesis, Floorplanning & Placement](./05_OpenLane_Floorplanning_and_Placement/)**  
+   * **Why it matters:** Initiates the physical ASIC backend flow for Claire Wolf's 32-bit RISC-V CPU core (`picorv32a`) on SkyWater 130nm. Explores Docker containerization, interactive OpenLane Tcl orchestration, mathematical Flop Ratio derivation (16.58%), square floorplanning (Aspect Ratio 1.0, 35.16% Utilization), Decoupling Capacitor and Well-Tap insertion, force-directed Global Placement (RePLace), Detailed Placement (OpenDP), setup timing slack (+12.89ns margin), and physical DEF inspection in Magic VLSI.
+   * **Key Artifacts:** Placed silicon DEF layout, Magic VLSI layout captures, terminal execution logs, Flop Ratio calculations, and cell-level pin abstracts (`VPWR`, `VGND`, `VNB`, `A`, `X`).
+
 ---
 
 ## 📊 Silicon Cell Mapping & PPA Benchmark Summary

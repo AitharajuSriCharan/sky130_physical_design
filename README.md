@@ -82,7 +82,7 @@ For reviewers, ASIC design engineers, and technical interviewers, navigate this 
 
 4. **[Module 04: Gate-Level Simulation (GLS) & Synthesis-Simulation Mismatches](./04_Gate_Level_Simulation_and_Synthesis_Mismatches/)**  
    * **Why it matters:** Eliminates the #1 cause of catastrophic silicon re-spins by proving divergence between behavioral simulator event queues and synthesized CMOS hardware. Analyzes sensitivity list bugs (`bad_mux`), blocking race conditions (`blocking_caveat`), and unwanted latch inference (`incomp_if`, `incomp_case`).
-   * **Key Artifacts:** Gate-level testbenches, GLS execution against SkyWater 130nm standard cell models (`primitives.v` + `sky130_fd_sc_hd.v`), and Yosys `$dlatch` vs `mux4_2` comparative reports.
+   * **Key Artifacts:** Comparative RTL vs GLS waveform timing traces (GTKWave), gate-level schematics, execution logs against SkyWater 130nm standard cell models (`primitives.v` + `sky130_fd_sc_hd.v`), and Yosys `$dlatch` vs `mux4_2` comparative reports.
 
 ---
 
@@ -175,6 +175,7 @@ sky130_physical_design/
 │   ├── sim/                                    # RTL vs GLS VCD waveform databases
 │   ├── netlist/                                # Synthesized gate-level netlists (Sky130)
 │   ├── reports/                                # Yosys synthesis & GLS logs
+│   ├── docs/images/                            # Comparative waveform traces & gate schematics
 │   ├── scripts/run_all_gls.sh                  # Automated Module 04 regression suite
 │   └── README.md                               # Complete Module 04 documentation
 └── README.md                                   # Root project documentation

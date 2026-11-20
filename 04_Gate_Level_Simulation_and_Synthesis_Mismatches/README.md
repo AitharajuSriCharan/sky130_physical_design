@@ -69,8 +69,15 @@ Stimulus applied in [`tb/tb_bad_mux.v`](./tb/tb_bad_mux.v):
 | **$30\,\text{ns}$** | `1, 1, 1` | **`1`** | **`0` (STALE / DROPPED)** | **`1` (CORRECT)** | ❌ **MISMATCH** |
 | **$40\,\text{ns}$** | `0, 1, 1` | `1` | **`1`** | **`1`** | Match (`sel` edge triggered block) |
 
+#### GTKWave Timing Diagram: RTL vs. Gate-Level Simulation (GLS)
+The timing trace below visually captures the catastrophic simulation failure. Notice that at $10\,\text{ns}$ and $30\,\text{ns}$, while the input transitions, RTL output `y_rtl` stays stale at `0`, whereas GLS output `y_gls` instantaneously reacts:
+
+![bad_mux Waveform Comparison](docs/images/bad_mux_waveform_comparison.png)
+
 ### 2.3 Synthesized SkyWater 130nm Hardware
 Yosys recognizes the Boolean equivalence $y = \text{sel} \cdot i_1 + \overline{\text{sel}} \cdot i_0$ and maps the logic directly to a single standard cell in [`netlist/bad_mux_synth.v`](./netlist/bad_mux_synth.v):
+
+![bad_mux Gate-Level Schematic](docs/images/bad_mux_schematic.png)
 
 ```verilog
 module bad_mux(i0, i1, sel, y);
@@ -119,8 +126,15 @@ Stimulus applied in [`tb/tb_blocking_caveat.v`](./tb/tb_blocking_caveat.v):
 | **$20\,\text{ns}$** | `1, 0, 0` | `0` | **`0`** | **`0`** | Match |
 | **$30\,\text{ns}$** | `1, 0, 1` | `1` | **`1`** (`x` already 1) | **`1`** | Match |
 
+#### GTKWave Timing Diagram: RTL vs. Gate-Level Simulation (GLS)
+The timing trace illustrates the artificial simulation delay introduced by out-of-order blocking evaluation in RTL:
+
+![blocking_caveat Waveform Comparison](docs/images/blocking_caveat_waveform_comparison.png)
+
 ### 3.3 Synthesized Silicon Complex Gate
 Yosys eliminates the intermediate register `x` through Boolean substitution, synthesizing the entire block into a single complex **OR-AND (O21A)** cell in [`netlist/blocking_caveat_synth.v`](./netlist/blocking_caveat_synth.v):
+
+![blocking_caveat Gate-Level Schematic](docs/images/blocking_caveat_schematic.png)
 
 ```verilog
 module blocking_caveat(a, b, c, d);
@@ -177,6 +191,8 @@ module incomp_if(i0, i1, i2, y);
   );
 endmodule
 ```
+
+![incomp_if Inferred Latch Schematic](docs/images/incomp_if_schematic.png)
 
 ### 4.3 Why Unwanted Latches Destroy Physical Design Closure
 In modern synchronous digital design (ASIC/FPGA), latches are strictly prohibited in data paths for three reasons:
@@ -238,6 +254,8 @@ module comp_case(sel, i0, i1, i2, i3, y);
   );
 endmodule
 ```
+
+![comp_case Synthesized 4:1 Mux Schematic](docs/images/comp_case_schematic.png)
 * **Zero latches inferred.** Clean mapping to a 4:1 multiplexer (`sky130_fd_sc_hd__mux4_2`).
 
 ---

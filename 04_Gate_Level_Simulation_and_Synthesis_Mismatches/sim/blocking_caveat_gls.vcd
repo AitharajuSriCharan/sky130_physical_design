@@ -1,0 +1,60 @@
+$date
+	Fri Nov 20 10:18:22 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_blocking_caveat $end
+$var wire 1 ! d $end
+$var reg 1 " a $end
+$var reg 1 # b $end
+$var reg 1 $ c $end
+$scope module uut $end
+$var wire 1 " a $end
+$var wire 1 # b $end
+$var wire 1 $ c $end
+$var wire 1 ! d $end
+$scope module _0_ $end
+$var wire 1 " A1 $end
+$var wire 1 # A2 $end
+$var wire 1 $ B1 $end
+$var wire 1 ! X $end
+$var wire 1 % and0_out_X $end
+$var wire 1 & or0_out $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0&
+0%
+0$
+0#
+0"
+0!
+$end
+#10000
+1!
+1%
+1&
+1$
+1"
+#20000
+0!
+0%
+0$
+#30000
+1!
+1%
+1$
+#40000
+0!
+0%
+0&
+0$
+0"
+#50000

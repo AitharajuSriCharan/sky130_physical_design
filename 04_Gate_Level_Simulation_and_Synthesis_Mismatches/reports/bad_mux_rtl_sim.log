@@ -1,0 +1,17 @@
+VCD info: dumpfile sim/bad_mux_rtl.vcd opened for output.
+======================================================================
+  [RTL MODE] Starting Behavioral RTL Simulation for bad_mux
+  Monitoring: Time | sel | i0 | i1 | Output y
+======================================================================
+     0 ns |  0  |  0 |  0 |    0
+[t=10000] Stimulus: Changing i0 to 1 with sel=0 (RTL will fail to update!)
+  10000 ns |  0  |  1 |  0 |    0
+[t=20000] Stimulus: Changing sel to 1 (RTL catches up)
+  20000 ns |  1  |  1 |  0 |    0
+[t=30000] Stimulus: Changing i1 to 1 with sel=1 (RTL will fail to update!)
+  30000 ns |  1  |  1 |  1 |    0
+[t=40000] Stimulus: Changing sel to 0 (RTL catches up again)
+  40000 ns |  0  |  1 |  1 |    1
+======================================================================
+  Simulation Complete.
+======================================================================

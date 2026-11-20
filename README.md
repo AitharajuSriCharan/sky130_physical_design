@@ -44,7 +44,16 @@ A production-grade, silicon-proven repository implementing the complete digital 
                                     │
                                     ▼
        ┌─────────────────────────────────────────────────────────┐
-  04   │ Physical Design & Tapeout Backend (OpenLane / OpenROAD) │
+  04   │ Gate-Level Simulation (GLS) & Synthesis Mismatches      │
+       │  • Sensitivity list omissions (bad_mux vs MUX hardware) │
+       │  • Out-of-order blocking assignments (blocking_caveat)  │
+       │  • Accidental latch inference (incomp_if / incomp_case) │
+       │  • GLS verification with Sky130 primitives & models     │
+       └────────────────────────────┬────────────────────────────┘
+                                    │
+                                    ▼
+       ┌─────────────────────────────────────────────────────────┐
+  05   │ Physical Design & Tapeout Backend (OpenLane / OpenROAD) │
        │  • Floorplanning, IO Pin Placement & Power Distribution │
        │  • Standard Cell Placement & Congestion Reduction       │
        │  • Clock Tree Synthesis (CTS) for Skew & Slew Control   │
@@ -71,6 +80,10 @@ For reviewers, ASIC design engineers, and technical interviewers, navigate this 
    * **Why it matters:** Explores storage element behavior under clocking, asynchronous bypass vs synchronous latency, transistor active-low polarity in Sky130, hierarchical vs flat boundary preservation, and zero-cost arithmetic routing.
    * **Key Artifacts:** 3 flip-flop designs (`dff_asyncres`, `dff_async_set`, `dff_syncres`), cycle-accurate latency waveforms, Yosys coarse/fine schematics, and zero-gate power-of-2 multiplier proofs.
 
+4. **[Module 04: Gate-Level Simulation (GLS) & Synthesis-Simulation Mismatches](./04_Gate_Level_Simulation_and_Synthesis_Mismatches/)**  
+   * **Why it matters:** Eliminates the #1 cause of catastrophic silicon re-spins by proving divergence between behavioral simulator event queues and synthesized CMOS hardware. Analyzes sensitivity list bugs (`bad_mux`), blocking race conditions (`blocking_caveat`), and unwanted latch inference (`incomp_if`, `incomp_case`).
+   * **Key Artifacts:** Gate-level testbenches, GLS execution against SkyWater 130nm standard cell models (`primitives.v` + `sky130_fd_sc_hd.v`), and Yosys `$dlatch` vs `mux4_2` comparative reports.
+
 ---
 
 ## 📊 Silicon Cell Mapping & PPA Benchmark Summary
@@ -80,6 +93,10 @@ All designs synthesized against the **SkyWater 130nm High-Density Standard-Cell 
 | Design Module | Top-Level Function | Synthesized SkyWater 130nm Standard Cells | Hardware Architecture & Transistor Realization | Total Cells | Total Silicon Area ($\mu\text{m}^2$) |
 | :--- | :--- | :--- | :--- | :---: | :---: |
 | **`good_mux`** | 2:1 Combinational MUX | `sky130_fd_sc_hd__mux2_1` | Dedicated High-Density 2:1 MUX cell ($1\times$ drive) | **1** | **$11.26$** |
+| **`bad_mux`** | MUX (GLS Mismatch) | `sky130_fd_sc_hd__mux2_1` | Correct physical MUX synthesized despite sensitivity list omission | **1** | **$11.26$** |
+| **`blocking_caveat`** | Out-of-Order Blocking | `sky130_fd_sc_hd__o21a_1` | Pure combinational OR-AND gate ($X = (A_1 + A_2) \cdot B_1$), 0 memory delay | **1** | **$6.26$** |
+| **`incomp_if`** | Missing `else` Branch | `$_DLATCH_P_` (Transparent D-Latch) | Synthesizer forced to infer level-sensitive latch to hold state | **1** | **Latch Inferred** |
+| **`comp_case`** | 4:1 MUX with `default` | `sky130_fd_sc_hd__mux4_2` | Fully specified 4:1 multiplexer cell with zero latches | **1** | **$17.52$** |
 | **`dff_asyncres`** | Async-Reset D-Flop | `sky130_fd_sc_hd__dfrtp_1`<br>`sky130_fd_sc_hd__clkinv_1` | Flip-Flop with dedicated Active-Low `RESET_B` pin + Inverter for Active-High RTL compatibility | **2** | **$28.78$** |
 | **`dff_async_set`** | Async-Set D-Flop | `sky130_fd_sc_hd__dfstp_2`<br>`sky130_fd_sc_hd__clkinv_1` | Flip-Flop with dedicated Active-Low `SET_B` pin ($2\times$ drive) + Inverter | **2** | **$30.03$** |
 | **`dff_syncres`** | Sync-Reset D-Flop | `sky130_fd_sc_hd__dfxtp_1`<br>`sky130_fd_sc_hd__lpflow_isobufsrc_1` | **No reset pin in silicon!** Plain flip-flop preceded by combinational AND-isolation gate on $D$ | **2** | **$26.28$** |
@@ -93,14 +110,14 @@ All designs synthesized against the **SkyWater 130nm High-Density Standard-Cell 
 
 ## ⚡ 1-Click Master Regression & Reproducibility
 
-Every simulation testbench, technology synthesis pass, and netlist generation run across the entire repository is fully automated and reproducible with a single script:
+Every simulation waveform, gate-level netlist, and synthesis statistic across all modules can be fully verified with a single regression run:
 
 ```bash
 # Clone the repository
 git clone https://github.com/AitharajuSriCharan/sky130_physical_design.git
 cd sky130_physical_design
 
-# Execute the complete master verification and synthesis regression suite
+# Execute the complete 5-stage master verification, synthesis, and GLS regression suite
 ./scripts/run_all.sh
 ```
 
@@ -112,11 +129,12 @@ cd sky130_physical_design
 # Synthesize Module 02 (Technology Mapping)
 ./02_Logic_Synthesis_and_Technology_Mapping/scripts/run_synth.sh
 
-# Run all Module 03 Sequential Simulations
+# Run Module 03 Sequential Simulations & Syntheses
 ./03_Sequential_Logic_and_Clocking/scripts/run_all_sim.sh
-
-# Run all Module 03 Technology Syntheses
 ./03_Sequential_Logic_and_Clocking/scripts/run_all_synth.sh
+
+# Run Module 04 Gate-Level Simulation (GLS) Suite
+./04_Gate_Level_Simulation_and_Synthesis_Mismatches/scripts/run_all_gls.sh
 ```
 
 ---
@@ -126,7 +144,7 @@ cd sky130_physical_design
 ```text
 sky130_physical_design/
 ├── scripts/
-│   └── run_all.sh                               # 1-Click Master Regression Suite
+│   └── run_all.sh                               # 1-Click Master 5-Stage Regression Suite
 ├── 01_RTL_Design_and_Verification/
 │   ├── src/good_mux.v                          # Behavioral 2:1 Multiplexer RTL
 │   ├── tb/tb_good_mux.v                        # Testbench with comprehensive vector suite
@@ -151,6 +169,14 @@ sky130_physical_design/
 │   ├── scripts/synth_all.tcl                   # Batch Yosys synthesis script
 │   ├── scripts/run_all_synth.sh                # Automated batch synthesis runner
 │   └── README.md                               # Complete Module 03 documentation
+├── 04_Gate_Level_Simulation_and_Synthesis_Mismatches/
+│   ├── src/                                    # bad_mux, blocking_caveat, incomp_if, incomp_case
+│   ├── tb/                                     # RTL & GLS verification testbenches
+│   ├── sim/                                    # RTL vs GLS VCD waveform databases
+│   ├── netlist/                                # Synthesized gate-level netlists (Sky130)
+│   ├── reports/                                # Yosys synthesis & GLS logs
+│   ├── scripts/run_all_gls.sh                  # Automated Module 04 regression suite
+│   └── README.md                               # Complete Module 04 documentation
 └── README.md                                   # Root project documentation
 ```
 
@@ -161,6 +187,7 @@ sky130_physical_design/
 | Layer | Tool | Version | Purpose |
 | :--- | :--- | :--- | :--- |
 | **HDL Simulation** | [Icarus Verilog](http://iverilog.icarus.com/) | v11.0 | IEEE 1364-2005 Verilog simulation & VCD generation |
+| **Gate-Level Simulation**| [Icarus Verilog](http://iverilog.icarus.com/) | v11.0 | Post-synthesis GLS with Sky130 standard-cell models |
 | **Waveform Analysis** | [GTKWave](http://gtkwave.sourceforge.net/) | v3.3.104 | Signal inspection, transition latency, & timing verification |
 | **Logic Synthesis** | [Yosys](https://yosyshq.net/yosys/) | v0.9+ | RTL elaboration, process decomposition, optimization |
 | **Technology Mapping** | [Berkeley ABC](https://github.com/berkeley-abc/abc) | Integrated | Boolean network optimization & standard cell library binding |

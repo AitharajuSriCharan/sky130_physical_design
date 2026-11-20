@@ -1,0 +1,39 @@
+$date
+	Fri Nov 20 10:18:19 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_bad_mux $end
+$var wire 1 ! y $end
+$var reg 1 " i0 $end
+$var reg 1 # i1 $end
+$var reg 1 $ sel $end
+$scope module uut $end
+$var wire 1 " i0 $end
+$var wire 1 # i1 $end
+$var wire 1 $ sel $end
+$var reg 1 ! y $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0$
+0#
+0"
+0!
+$end
+#10000
+1"
+#20000
+1$
+#30000
+1#
+#40000
+1!
+0$
+#50000

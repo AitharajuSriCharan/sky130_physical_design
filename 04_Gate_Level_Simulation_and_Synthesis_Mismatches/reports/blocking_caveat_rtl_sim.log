@@ -1,0 +1,16 @@
+VCD info: dumpfile sim/blocking_caveat_rtl.vcd opened for output.
+======================================================================
+  [RTL MODE] Starting Behavioral RTL Simulation for blocking_caveat
+  Monitoring: Time | a | b | c | Output d (Expected: (a|b)&c)
+======================================================================
+     0 ns | 0 | 0 | 0 |    0
+[t=10000] Stimulus: a=1, b=0, c=1 (Expected d=1; RTL will fail due to stale x!)
+  10000 ns | 1 | 0 | 1 |    0
+[t=20000] Stimulus: c=0 (Both RTL and GLS output d=0)
+  20000 ns | 1 | 0 | 0 |    0
+[t=30000] Stimulus: c=1 (Now RTL x is already 1, so d catches up to 1)
+  30000 ns | 1 | 0 | 1 |    1
+  40000 ns | 0 | 0 | 0 |    0
+======================================================================
+  Simulation Complete.
+======================================================================

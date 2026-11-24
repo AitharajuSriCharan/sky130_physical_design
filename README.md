@@ -1,12 +1,16 @@
 # 🚀 Open-Source Digital ASIC Design Flow (SkyWater 130nm)
 
 [![PDK](https://img.shields.io/badge/PDK-SkyWater%20130nm%20(sky130A)-0055FF.svg)](https://github.com/google/skywater-pdk)
+[![Architecture](https://img.shields.io/badge/Architecture-RISC--V%20(RV32IMC)-red.svg)](https://github.com/YosysHQ/picorv32)
+[![Core](https://img.shields.io/badge/Core-PicoRV32a%20(32--Bit%20CPU)-orange.svg)](./05_OpenLane_Floorplanning_and_Placement/)
 [![Simulation](https://img.shields.io/badge/Simulation-Icarus%20Verilog%20%7C%20GTKWave-2ea44f.svg)](https://github.com/steveicarus/iverilog)
 [![Synthesis](https://img.shields.io/badge/Synthesis-Yosys%20%7C%20Berkeley%20ABC-f68a1e.svg)](https://github.com/YosysHQ/yosys)
 [![Master Regression](https://img.shields.io/badge/Master%20Regression-100%25%20Passing-brightgreen.svg)](#-1-click-master-regression--reproducibility)
 [![Standard Cells](https://img.shields.io/badge/Standard%20Cells-sky130__fd__sc__hd-blueviolet.svg)](#-silicon-cell-mapping--ppa-benchmark-summary)
 
 A production-grade, silicon-proven repository implementing the complete digital Application-Specific Integrated Circuit (ASIC) implementation flow from **RTL specification to tapeout-ready GDSII**, targeting the open-source **SkyWater 130nm Process Design Kit (`sky130_fd_sc_hd`)**.
+
+> 🏆 **Flagship Microprocessor Implementation:** Features the complete backend physical implementation of Claire Wolf's **32-Bit RISC-V CPU Core (`picorv32a` - RV32IMC)**, synthesized into **9,624 standard cells** (1,596 D-Flip-Flops), floorplanned onto a **$557\,\mu\text{m} \times 568\,\mu\text{m}$ square silicon die** ($35.16\%$ Core Utilization), and legally placed with **`+12.89 ns` Setup Slack** and **`✔ DRC=0`** errors in Magic VLSI.
 
 ---
 
@@ -109,6 +113,7 @@ All designs synthesized against the **SkyWater 130nm High-Density Standard-Cell 
 | **`mult2`** ($A \times 2$) | Power-of-2 Multiply | **ZERO CELLS (0 Gates)** | Pure copper wire left-shift ($\{A[2:0],\, 1'b0\}$) with LSB tied to Ground | **0** | **$0.00$** |
 | **`mult8`** ($A \times 8$) | Power-of-2 Multiply | **ZERO CELLS (0 Gates)** | Pure copper wire left-shift ($\{A[2:0],\, 3'b000\}$) with 3 LSBs tied to Ground | **0** | **$0.00$** |
 | **`opt_check`** ($A \,?\, B : 0$) | Ternary MUX Reduction | `sky130_fd_sc_hd__and2_0` | Boolean simplification $Y = A \cdot B$ collapses MUX to single 2-input AND gate | **1** | **$6.26$** |
+| **`picorv32a`** | **32-Bit RISC-V CPU Core** | Complete `sky130_fd_sc_hd` standard cell library | **RV32IMC scalar CPU:** 1,596 DFFs (Flop Ratio 16.58%), 1,891 MUXes, 2,101 buffers. Sized to $546\,\mu\text{m} \times 544\,\mu\text{m}$ core ($35.16\%$ util), placed with $+12.89\,\text{ns}$ setup slack. | **9,624** | **$104,443.92$** (Post-resizer: $110,268$) |
 
 ---
 

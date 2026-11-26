@@ -10,9 +10,9 @@
 
 ## 1. Executive Summary
 
-This module establishes an end-to-end, production-grade custom standard cell library flow on the **SkyWater 130nm CMOS process node (`sky130A`)**. 
+This module establishes an end-to-end custom standard cell library flow on the **SkyWater 130nm CMOS process node (`sky130A`)**. 
 
-Rather than relying on unverified third-party academic starter code, this design is built directly upon the official **Google & SkyWater Foundry standard cell architecture (`sky130_fd_sc_hd`)**. The custom inverter (`sky130_sricharan_inv`) is physically verified, parasitically extracted with sub-femtofarad precision, characterized for both AC transient dynamics and DC Voltage Transfer Characteristics (VTC) in `ngspice`, and exported as a production-ready Physical Library Abstract (`.lef`) formatted for seamless integration into Claire Wolf's 32-bit RISC-V (`picorv32a`) core.
+The custom inverter (`sky130_sricharan_inv`) is built adhering to the high-density standard cell architecture (`sky130_fd_sc_hd`). The cell is physically verified for design rules (DRC clean), parasitically extracted with sub-femtofarad precision, characterized for both dynamic AC transient switching and DC Voltage Transfer Characteristics (VTC) in `ngspice`, and exported as a production-ready Physical Library Abstract (`.lef`) formatted for automated placement and routing inside Claire Wolf's 32-bit RISC-V (`picorv32a`) core.
 
 ---
 
@@ -163,19 +163,25 @@ END LIBRARY
 
 ---
 
-## 6. Comprehensive Benchmark Comparison
+## 6. Standard Cell Electrical & Physical Datasheet
 
-| Evaluation Metric | Generic Workshop Repo (`iamsrinivasraod-ops`) | Custom Silicon Flow (`AitharajuSriCharan`) | Architectural Impact |
+| Parameter | Specification | Unit | Description / Condition |
 | :--- | :--- | :--- | :--- |
-| **Silicon Baseline** | Cloned unverified demo files | Official Google/SkyWater Foundry Architecture | Production reliability & zero layout hacks |
-| **DRC Verification** | Fragmented checks, syntax typos | **Clean DRC = 0** against SkyWater foundry rules | Guaranteed zero DRC violations in PnR |
-| **Grid Proof** | Qualitative hand-waving | **Strict mathematical derivation** down to nanometers | Eliminates routing off-grid shorts |
-| **Parasitic Extraction** | Truncated netlist | Full RC parasitic network ($C_0 \dots C_{10}$, Miller caps) | Ultra-accurate sub-micron dynamic modeling |
-| **AC Dynamics** | Single rough delay measurement | Rigorous automated `$t_{pdR}, t_{pdF}$, slew` deck | Full NLDM table readiness |
-| **DC VTC Analysis** | **Omitted completely** | **$V_M = 0.853\,\text{V}$ ($47\,\text{mV}$ delta)** | Direct noise margin & logic stability proof |
-| **Routing Abstract** | Untested LEF export | Fully bounded `unithd` ($1.38\,\mu\text{m} \times 2.72\,\mu\text{m}$) LEF | Ready for 32-bit RISC-V SoC injection |
+| **Process Node** | SkyWater 130nm CMOS (`sky130A`) | - | 1-Poly, 5-Metal layer stack |
+| **Library Standard** | High-Density (`hd`) | - | 8-Track row height standard |
+| **Cell Dimensions** | $1.380 \times 2.720$ | $\mu\text{m}$ | $3 \times \text{Track}_X \times 8 \times \text{Track}_Y$ |
+| **Cell Area** | $3.7536$ | $\mu\text{m}^2$ | Bounded layout core area |
+| **Operating Voltage ($V_{DD}$)** | $1.80$ | $\text{V}$ | Nominal digital supply |
+| **Nominal Temperature** | $27$ | $^\circ\text{C}$ | Typical operating condition |
+| **Switching Threshold ($V_M$)** | $0.853$ | $\text{V}$ | DC point where $V_{in} = V_{out}$ |
+| **Rise Delay ($t_{pdR}$)** | $127.48$ | $\text{ps}$ | $50\%\to 50\%$ input falling, $C_L = 20\,\text{fF}$ |
+| **Fall Delay ($t_{pdF}$)** | $77.45$ | $\text{ps}$ | $50\%\to 50\%$ input rising, $C_L = 20\,\text{fF}$ |
+| **Rise Transition ($t_r$)** | $238.66$ | $\text{ps}$ | $10\%\to 90\%$ output transition |
+| **Fall Transition ($t_f$)** | $113.05$ | $\text{ps}$ | $90\%\to 10\%$ output transition |
+| **Static Leakage ($I_{leak}$)** | $1.916$ | $\text{pA}$ | Quiescent state off-current |
+| **DRC Violations** | $0$ | violations | Full foundry Design Rule Clean |
 
 ---
 
 *Authored by: **Sri Charan Aitharaju***  
-*Hardware Engineering Portfolio — SkyWater 130nm ASIC Implementation*
+*Digital ASIC Design & Implementation Engineer*

@@ -1,0 +1,20 @@
+* Testbench for sky130_sricharan_inv
+.lib 'sky130.lib.spice' tt
+
+.include 'sky130_sricharan_inv.spice'
+
+* Instantiate inverter: A VGND VNB VPB VPWR Y
+X1 in 0 0 vdd vdd out sky130_sricharan_inv
+
+Vdd vdd 0 1.8V
+Vin in 0 pulse(0V 1.8V 0.1ns 0.05ns 0.05ns 1ns 2ns)
+Cload out 0 20fF
+
+.tran 0.01ns 4ns
+
+.control
+run
+print max(v(out)) min(v(out))
+quit
+.endc
+.end

@@ -92,6 +92,14 @@ For reviewers, ASIC design engineers, and technical interviewers, navigate this 
    * **Why it matters:** Initiates the physical ASIC backend flow for Claire Wolf's 32-bit RISC-V CPU core (`picorv32a`) on SkyWater 130nm. Explores Docker containerization, interactive OpenLane Tcl orchestration, mathematical Flop Ratio derivation (16.58%), square floorplanning (Aspect Ratio 1.0, 35.16% Utilization), Decoupling Capacitor and Well-Tap insertion, force-directed Global Placement (RePLace), Detailed Placement (OpenDP), setup timing slack (+12.89ns margin), and physical DEF inspection in Magic VLSI.
    * **Key Artifacts:** Placed silicon DEF layout, Magic VLSI layout captures, terminal execution logs, Flop Ratio calculations, and cell-level pin abstracts (`VPWR`, `VGND`, `VNB`, `A`, `X`).
 
+6. **[Module 06: Custom Standard Cell Engineering & SPICE Characterization](./06_Custom_Standard_Cell_Design_and_Characterization/)**  
+   - Custom SkyWater 130nm CMOS Inverter layout in Magic VLSI with **0 DRC violations**.
+   - Mathematical track-grid pin alignment verification on Local Interconnect (.46\,\mu	ext{m} 	imes 0.34\,\mu	ext{m}$).
+   - Sub-femtofarad parasitic extraction (ext2spice) and dynamic transient switching analysis in 
+gspice ({pdR} = 127\,	ext{ps}, t_{pdF} = 77\,	ext{ps}$).
+   - Full DC Voltage Transfer Characteristic (VTC) analysis with switching threshold  = 0.853\,	ext{V}$.
+   - Production Physical Library Abstract (sky130_sricharan_inv.lef) streamed for 32-bit RISC-V SoC integration.
+
 ---
 
 ## 📊 Silicon Cell Mapping & PPA Benchmark Summary

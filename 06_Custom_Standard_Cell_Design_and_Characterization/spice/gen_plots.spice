@@ -1,0 +1,18 @@
+* Simulation deck exporting raw data
+.lib 'sky130.lib.spice' tt
+.include 'sky130_sricharan_inv.spice'
+
+X1 in 0 0 vdd vdd out sky130_sricharan_inv
+Vdd vdd 0 1.8V
+Vin in 0 pulse(0V 1.8V 0.5ns 0.05ns 0.05ns 1.5ns 3ns)
+Cload out 0 20fF
+.tran 0.005ns 4ns
+
+.control
+run
+wrdata reports/transient_data.txt time v(in) v(out)
+dc Vin 0 1.8 0.005
+wrdata reports/vtc_data.txt v-sweep v(out)
+quit
+.endc
+.end

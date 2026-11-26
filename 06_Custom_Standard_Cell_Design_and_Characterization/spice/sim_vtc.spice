@@ -1,0 +1,19 @@
+* DC Voltage Transfer Characteristic (VTC) for sky130_sricharan_inv
+.lib 'sky130.lib.spice' tt
+.include 'sky130_sricharan_inv.spice'
+
+X1 in 0 0 vdd vdd out sky130_sricharan_inv
+
+Vdd vdd 0 1.8V
+Vin in 0 0V
+
+.dc Vin 0 1.8 0.005
+
+.control
+run
+meas dc vm WHEN v(out)=v(in)
+print vm
+
+plot v(out) vs v(in)
+.endc
+.end

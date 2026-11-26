@@ -1,0 +1,19 @@
+* SPICE3 file created from sky130_sricharan_inv.ext - technology: sky130A
+
+.subckt sky130_sricharan_inv A VGND VNB VPB VPWR Y
+X1000 Y A VPWR VPB sky130_fd_pr__pfet_01v8 w=1.0 l=0.15
++  ad=2.6e+11p pd=2.52e+06u as=2.6e+11p ps=2.52e+06u
+X1001 Y A VGND VNB sky130_fd_pr__nfet_01v8 w=0.65 l=0.15
++  ad=1.69e+11p pd=1.82e+06u as=1.69e+11p ps=1.82e+06u
+C0 VPWR VGND 0.01fF
+C1 VPWR Y 0.26fF
+C2 VPB Y 0.00fF
+C3 VPWR VPB 0.02fF
+C4 A VGND 0.06fF
+C5 A Y 0.14fF
+C6 VPWR A 0.06fF
+C7 VGND Y 0.20fF
+C8 Y VNB 0.17fF
+C9 VPWR VNB 0.35fF
+C10 VPB VNB 0.27fF
+.ends
